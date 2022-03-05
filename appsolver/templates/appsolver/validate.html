@@ -1,0 +1,69 @@
+{% extends "appsolver/base.html" %}
+{% load static %}
+
+{% block title %}
+Wordle-Solve validate
+{% endblock %}
+
+{% block body %}
+
+<div class='container row col-12'>
+    {% include 'appsolver/board.html' %}
+
+    <div id="validateform" class="col-4">
+        <form id='lclick' action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <h4>Click on each letter of your last guess to change the color to match the wordle response</h4>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" 
+                name="validateguess" type="hidden" value="">
+                <button class="btn btn-primary" type="submit">Validate</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    function recordloc(cid) {
+        console.log(cid);
+        if ((cid < {{ lowid }} ) || (cid >= {{ highid }})) {
+            return;
+        }
+        let cell = document.getElementById(cid);
+        let ccolor = cell.getAttribute('data')
+        if (ccolor == ' ') {
+            cell.setAttribute('data', 'B');
+            cell.setAttribute('class', 'noselect text-light bg-dark');
+            console.log('was blank now black');
+        }
+        if (ccolor == 'B') {
+            cell.setAttribute('data', 'Y');
+            cell.setAttribute('class', 'noselect text-light bg-warning');
+            console.log('was black now yellow');
+        }
+        if (ccolor == 'Y') {
+            cell.setAttribute('data', 'G');
+            cell.setAttribute('class', 'noselect text-light bg-success');
+            console.log('was yellow now green');
+        }
+        if (ccolor == 'G') {
+            cell.setAttribute('data', ' ');
+            cell.setAttribute('class', 'noselect text-dark bg-light');
+            console.log('was gold now blank');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        let allcells = document.querySelectorAll('td');
+        console.log('setting onclick for cells numbering');
+        console.log(allcells.length);
+        allcells.forEach((thisValue) => {
+            thisValue.setAttribute('onclick', 'recordloc(id)');
+        });
+    });
+
+</script>
+
+{% endblock %}

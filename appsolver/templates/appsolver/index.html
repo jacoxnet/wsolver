@@ -1,0 +1,30 @@
+{% extends "appsolver/base.html" %}
+{% load static %}
+
+{% block title %}
+Wordle-Solve
+{% endblock %}
+
+{% block body %}
+
+<div class='container row col-12'>
+    {% include 'appsolver/board.html' %}  
+
+    <div id="guessform" class="col-4">
+        <form id='gword' action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" 
+                    name="guessword" placeholder="Your Guess" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+</script>
+
+{% endblock %}

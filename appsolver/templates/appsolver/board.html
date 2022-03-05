@@ -1,0 +1,21 @@
+    <div class='col-4'>
+        <table id="mgrid" class="table table-bordered">
+            {% for guess in theboard %}
+                <tr>
+                {% for letterguess in guess %}
+                    <td id = {{ letterguess.cid }}
+                    {% if letterguess.color == 'G' %}
+                        class="noselect text-light bg-success" data="G"
+                    {% elif letterguess.color == 'B' %}
+                        class="noselect text-light bg-dark" data="B"
+                    {% elif letterguess.color == 'Y' %}
+                        class="noselect text-light bg-warning" data="Y"
+                    {% else %} 
+                        class="noselect text-dark bg-light" data=" "
+                    {% endif %}
+                    > {{ letterguess.letter }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
