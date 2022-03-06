@@ -34,9 +34,12 @@ def inittheboard():
             tb.board[i].append(OneLetterGuess(' ', 'W', i * WORDLEN + j))
     return tb
 
-all_words = readinwords()
+def initall():
+    r = readinwords()
+    k = initKnowledge()
+    t = inittheboard()
+    return r, k, t
+
+all_words, knowledge, theboard = initall()
+
 valid_words = copy.deepcopy(all_words)
-
-knowledge = initKnowledge()
-
-theboard = inittheboard()

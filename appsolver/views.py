@@ -8,8 +8,8 @@ from django.urls import reverse
 import csv
 from datetime import datetime
 
-from .wordle_init import all_words, valid_words, knowledge, theboard
-from .wordle_solve import WORDLEN, GUESSLEN, OneLetterGuess
+from .wordle_init import theboard, initall
+from .wordle_solve import WORDLEN, OneLetterGuess
 
 # Create your views here.
 
@@ -62,6 +62,6 @@ def settings(request):
     return render(request, "appsolver/settings.html", context)
 
 def clear(request):
-    from .wordle_init import all_words, valid_words, knowledge, theboard
+    valid_words, knowledge, theboard = initall()
     messages.add_message(request, messages.INFO, "Board Cleared")
     return HttpResponseRedirect(reverse("index"))
