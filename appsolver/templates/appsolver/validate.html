@@ -26,59 +26,51 @@ Wordle-Solve validate
 
 
 <script>
-
-    function getResponse() {
-        console.log('getResponse called');
-        let test = document.getElementById(0);
-        console.log(test);
-        var response = '';
-        const lowid = {{ lowid }};
-        const highid = {{ highid }};
-        var cell = document.getElementById(lowid);
-        response = response + cell.getAttribute('data');
-        cell = document.getElementById(lowid+1);
-        response = response + cell.getAttribute('data');
-        cell = document.getElementById(lowid+2);
-        response = response + cell.getAttribute('data');
-        cell = document.getElementById(lowid+3);
-        response = response + cell.getAttribute('data');
-        cell = document.getElementById(lowid+4);
-        response = response + cell.getAttribute('data');
-
-        getElementById('validateguess').setAttribute('value', response);
-        console.log('returned response:');
-        console.log(response);
-    }
-
     
+    /* handlee clicks on board letters in current guess, rotating them as necessary in color
+       keep record of color to pass back to server app */
+       
     function recordloc(cid) {
         console.log(cid);
-        if ((cid < {{ lowid }} ) || (cid >= {{ highid }})) {
-            return;
+        var lowid = {{ lowid }};
+        var highid = {{ highid }};
+        var current_response = '';
+        var cell, ccolor, newcolor;
+        for (let c = lowid; c < highid; c++) {
+            cell = document.getElementById(c)
+            ccolor = cell.getAttribute('data');
+            if (c == cid) {
+                if (ccolor == ' ') {
+                    newcolor = 'B';
+                    cell.setAttribute('data', newcolor);
+                    cell.setAttribute('class', 'noselect text-light bg-dark');
+                    console.log('was blank now black');
+                }
+                if (ccolor == 'B') {
+                    newcolor = 'Y'
+                    cell.setAttribute('data', newcolor);
+                    cell.setAttribute('class', 'noselect text-light bg-warning');
+                    console.log('was black now yellow');
+                }
+                if (ccolor == 'Y') {
+                    newcolor = 'G';
+                    cell.setAttribute('data', newcolor);
+                    cell.setAttribute('class', 'noselect text-light bg-success');
+                    console.log('was yellow now green');
+                }
+                if (ccolor == 'G') {
+                    newcolor = ' ';
+                    cell.setAttribute('data', newcolor);
+                    cell.setAttribute('class', 'noselect text-dark bg-light');
+                    console.log('was gold now blank');
+                }
+                ccolor = newcolor
+            }
+            current_response = current_response + ccolor;
         }
-        let cell = document.getElementById(cid);
-        let ccolor = cell.getAttribute('data')
-        if (ccolor == ' ') {
-            cell.setAttribute('data', 'B');
-            cell.setAttribute('class', 'noselect text-light bg-dark');
-            console.log('was blank now black');
-        }
-        if (ccolor == 'B') {
-            cell.setAttribute('data', 'Y');
-            cell.setAttribute('class', 'noselect text-light bg-warning');
-            console.log('was black now yellow');
-        }
-        if (ccolor == 'Y') {
-            cell.setAttribute('data', 'G');
-            cell.setAttribute('class', 'noselect text-light bg-success');
-            console.log('was yellow now green');
-        }
-        if (ccolor == 'G') {
-            cell.setAttribute('data', ' ');
-            cell.setAttribute('class', 'noselect text-dark bg-light');
-            console.log('was gold now blank');
-        }
-        getResponse();
+        document.getElementById('validateguess').setAttribute('value', current_response);
+        console.log('returned response:');
+        console.log(current_response);
     }
 
 

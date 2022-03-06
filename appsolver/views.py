@@ -20,7 +20,7 @@ def index(request):
         username = request.session.get('username', '0')
         if username == '0':
             print('I dont recognize you - registering as new')
-            register_new_user(request)
+            username = register_new_user(request)
         print('your username is ', username)
         context = {
             "theboard": request.session.get('theboard')
@@ -35,16 +35,15 @@ def index(request):
             # return HttpResponseRedirect(reverse("guess"))
             messages.add_message(request, messages.INFO, "Invalid guess")
             return HttpResponseRedirect(reverse("index"))
+        guessword = guessword.upper()
         g = []
         print('adding', guessword, ' to board at position ', theboard.current_guess)
-        for i in range(len(guessword)):
-            letter = guessword[i]
-            g.append(OneLetterGuess(letter.upper(), 'W', theboard.current_guess*WORDLEN + i))
-        theboard.board[theboard.current_guess] = g
+        for i in range(WORDLEN):
+            theboard.board[theboard.current_guess][i].letter = guessword[i]
         context = {
             "theboard": theboard,
             "lowid": theboard.current_guess * WORDLEN,
-            "highid": WORDLEN
+            "highid": (theboard.current_guess + 1) * WORDLEN
         }
         request.session['theboard'] = theboard
         return render(request, "appsolver/validate.html", context)
@@ -58,14 +57,20 @@ def validate(request):
             # space means a letter wasn't selected
             messages.add_message(request, messages.INFO, "Invalid response")
             return HttpResponseRedirect(reverse("validate"))
+        # update the board
+        for i in range(WORDLEN):
+            theboard.board[theboard.current_guess][i].color = validateguess[i]
         theboard.current_guess = theboard.current_guess + 1
+        request.session['theboard'] = theboard
         print('guess of ', validateguess, ' recorded')
+        return HttpResponseRedirect(reverse("index"))
+        
     else:
         theboard = request.session.get('theboard')
         context = {
             "theboard": theboard,
             "lowid": theboard.current_guess * WORDLEN,
-            "highid": WORDLEN
+            "highid": (theboard.current_guess + 1) * WORDLEN
         }
         return render(request, "appsolver/validate.html", context)
             
@@ -76,6 +81,7 @@ def register_new_user(request):
     user.save()
     request.session['username'] = newusername
     clear_board_data(request)
+    return newusername
 
 def clear_board_data(request):
     request.session['all_words'] = readinwords()

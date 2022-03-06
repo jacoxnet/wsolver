@@ -3,7 +3,7 @@
             {% for guess in theboard.board %}
                 <tr>
                 {% for letterguess in guess %}
-                    <td id = {{ letterguess.cid }}
+                    <td id = '{{ letterguess.cid }}'
                     {% if letterguess.color == 'G' %}
                         class="noselect text-light bg-success" data="G"
                     {% elif letterguess.color == 'B' %}
