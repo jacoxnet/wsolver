@@ -11,21 +11,46 @@ Wordle-Solve validate
     {% include 'appsolver/board.html' %}
 
     <div id="validateform" class="col-4">
-        <form id='lclick' action="{% url 'index' %}" method="post">
+        <form id='validation' action="{% url 'validate' %}" method="post">
             {% csrf_token %}
             <h4>Click on each letter of your last guess to change the color to match the wordle response</h4>
             <div class="form-group">
                 <input autocomplete="off" autofocus class="form-control" 
-                name="validateguess" type="hidden" value="">
+                id="validateguess" name="validateguess" type="hidden" value="">
                 <button class="btn btn-primary" type="submit">Validate</button>
             </div>
         </form>
     </div>
+
 </div>
 
 
 <script>
 
+    function getResponse() {
+        console.log('getResponse called');
+        let test = document.getElementById(0);
+        console.log(test);
+        var response = '';
+        const lowid = {{ lowid }};
+        const highid = {{ highid }};
+        var cell = document.getElementById(lowid);
+        response = response + cell.getAttribute('data');
+        cell = document.getElementById(lowid+1);
+        response = response + cell.getAttribute('data');
+        cell = document.getElementById(lowid+2);
+        response = response + cell.getAttribute('data');
+        cell = document.getElementById(lowid+3);
+        response = response + cell.getAttribute('data');
+        cell = document.getElementById(lowid+4);
+        response = response + cell.getAttribute('data');
+
+        getElementById('validateguess').setAttribute('value', response);
+        console.log('returned response:');
+        console.log(response);
+    }
+
+    
     function recordloc(cid) {
         console.log(cid);
         if ((cid < {{ lowid }} ) || (cid >= {{ highid }})) {
@@ -53,7 +78,9 @@ Wordle-Solve validate
             cell.setAttribute('class', 'noselect text-dark bg-light');
             console.log('was gold now blank');
         }
+        getResponse();
     }
+
 
     document.addEventListener("DOMContentLoaded", function(event) {
         let allcells = document.querySelectorAll('td');

@@ -22,8 +22,11 @@ class OneLetterGuess:
 class PuzzleBoard:
 
     def __init__(self):
+        self.wordlen = WORDLEN
+        self.guesslen = GUESSLEN
         self.board = []
         self.current_guess = 0
+
 
 
 
@@ -47,6 +50,7 @@ class WordKnowledge:
             self.position.append(PositionList(i))
         # mandatory letters but not in a specific position
         self.mandatory = []
+    
     
     def addman(self, ltr):
         if ltr not in self.mandatory:

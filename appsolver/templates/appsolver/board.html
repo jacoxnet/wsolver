@@ -1,6 +1,6 @@
     <div class='col-4'>
         <table id="mgrid" class="table table-bordered">
-            {% for guess in theboard %}
+            {% for guess in theboard.board %}
                 <tr>
                 {% for letterguess in guess %}
                     <td id = {{ letterguess.cid }}
