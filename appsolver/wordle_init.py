@@ -1,6 +1,7 @@
 from django.core.files import File
 import json, copy
 from .wordle_solve import WordKnowledge, WORDLEN, PuzzleBoard, GUESSLEN, OneLetterGuess
+from .models import BigDWord, WordleWord, ValidWord
 
 # word list - load in from json file
 # returns valid_words list
