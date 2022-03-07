@@ -40,6 +40,7 @@ def index(request):
         print('adding', guessword, ' to board at position ', theboard.current_guess)
         for i in range(WORDLEN):
             theboard.board[theboard.current_guess][i].letter = guessword[i]
+        request.session['last_guess'] = guessword
         context = {
             "theboard": theboard,
             "lowid": theboard.current_guess * WORDLEN,
@@ -61,6 +62,9 @@ def validate(request):
         for i in range(WORDLEN):
             theboard.board[theboard.current_guess][i].color = validateguess[i]
         theboard.current_guess = theboard.current_guess + 1
+        k = request.session.get('knowledge')
+        k.update_knowledge(request.session.get('last_guess'), validateguess)
+        
         request.session['theboard'] = theboard
         print('guess of ', validateguess, ' recorded')
         return HttpResponseRedirect(reverse("index"))

@@ -22,6 +22,8 @@ Wordle-Solve validate
         </form>
     </div>
 
+    {% include 'appsolver/wordlist' %}
+    
 </div>
 
 
@@ -29,7 +31,7 @@ Wordle-Solve validate
     
     /* handlee clicks on board letters in current guess, rotating them as necessary in color
        keep record of color to pass back to server app */
-       
+
     function recordloc(cid) {
         console.log(cid);
         var lowid = {{ lowid }};

@@ -7,7 +7,7 @@ Wordle-Solve
 
 {% block body %}
 
-<div class='container row col-12'>
+<div class='container row col-12'>\
     {% include 'appsolver/board.html' %}  
 
     <div id="guessform" class="col-4">
@@ -20,6 +20,13 @@ Wordle-Solve
             <button class="btn btn-primary" type="submit">Submit</button>
         </form>
     </div>
+
+    <select class='form select' aria-label='Word suggestion box'>
+        {% for word in wordlist %}
+            <option value='{{ forloop.counter }}'>{{ word }}</option>
+        {% endfor %}
+
+
 </div>
 
 

@@ -1,5 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import MyDictionary
-admin.site.register(MyDictionary)
+from .models import BigDWord, WordleWord, ValidWord
+admin.site.register(BigDWord)
+admin.site.register(WordleWord)
+admin.site.register(ValidWord)
