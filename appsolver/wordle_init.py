@@ -6,7 +6,7 @@ from .models import BigDWord, WordleWord, ValidWord
 # word list - load in from json file
 # returns valid_words list
 def readinwords():    
-    all_words = [word.word_text for word in WordleWord.objects.all()]
+    all_words = [word.word_text.upper() for word in WordleWord.objects.all()]
     return all_words
 
 # initialize knowledge and return

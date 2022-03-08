@@ -17,16 +17,39 @@ Wordle-Solve
             {% csrf_token %}
             <div class="form-group">
                 <input autocomplete="off" autofocus class="form-control" 
-                    name="guessword" placeholder="Your Guess" type="text">
+                    name="guessword" id='guessword' placeholder="Your Guess" type="text">
             </div>
             <button class="btn btn-primary" type="submit">Submit</button>
         </form>
     </div>
 
 </div>
-{% include 'appsolver/wordlist.html' %}
+
+<div id='wordform' class='row justify-content-center'>
+
+    <div class='col-5'>
+
+        {% if nowords %}
+            <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
+        {% else %}
+            <h2>Top suggested guesses:</h2>
+                <ul>
+                    {% for word in topwords %}
+                        <li><h4 id='{{ word }}' onclick=guess_word('{{ word }}')> {{ word }} </h4>
+                        </li>
+                {% endfor %}
+                </ul>
+        {% endif %}
+    </div>
+
+</div>
 
 <script>
+
+    function guess_word(word) {
+        let box = document.querySelector('#guessword');
+        box.setAttribute('value', word);
+    }
 
 </script>
 

@@ -40,7 +40,7 @@ class PositionList:
     def __init__(self, number):
         self.letter = {}
         # set all positions and letters to ^ (possible not confirmed)
-        for i in range(ord('a'), ord('z') + 1):
+        for i in range(ord('A'), ord('Z') + 1):
             self.letter[chr(i)] = '^'
 
 class WordKnowledge:
@@ -65,7 +65,7 @@ class WordKnowledge:
         
     # confirm a letter in a specific position
     def confirm(self, posn, ltr):
-        for i in range(ord('a'), ord('z') + 1):
+        for i in range(ord('A'), ord('Z') + 1):
             self.position[posn].letter[chr(i)] = '-'
         self.position[posn].letter[ltr] = '+'
 
@@ -163,7 +163,7 @@ class WordKnowledge:
     def get_top_words(self, valids):
         # prepare a list of counts of letters in valid words
         counts = {}
-        for ch in range(ord('a'), ord('z') + 1):
+        for ch in range(ord('A'), ord('Z') + 1):
             count1 = 0
             for word in valids:
                 if chr(ch) in word:

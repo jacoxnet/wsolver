@@ -59,9 +59,11 @@ def validate(request):
         for i in range(WORDLEN):
             theboard.board[theboard.current_guess][i].color = validateguess[i]
         theboard.current_guess = theboard.current_guess + 1
+        last_guess = request.session.get('last_guess')
         k = request.session.get('knowledge')
-        k.update_knowledge(request.session.get('last_guess'), validateguess)
-        
+        print('updating knowledge', last_guess, validateguess)
+        k.update_knowledge(last_guess, validateguess)
+        request.session['valid_words'] = k.getUpdatedWordList(request.session.get('valid_words'))
         request.session['theboard'] = theboard
         print('guess of ', validateguess, ' recorded')
         return HttpResponseRedirect(reverse("guess"))
@@ -102,9 +104,14 @@ def guess(request):
         k = request.session.get('knowledge')            
         valid_words = request.session.get('valid_words')
         print('retrieved', len(valid_words), ' valid words')
+        if len(valid_words) == 0:
+            nowords = True
+        else:
+            nowords = False
         context = {
             "theboard": request.session.get('theboard'),
-            "topwords": k.get_top_words(valid_words)
+            "topwords": k.get_top_words(valid_words),
+            "nowords": nowords
         }
         return render(request, "appsolver/index.html", context)    
 
