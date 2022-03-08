@@ -6,19 +6,7 @@ from .models import BigDWord, WordleWord, ValidWord
 # word list - load in from json file
 # returns valid_words list
 def readinwords():    
-    f = open('/home/jacox/code/wsolver/appsolver/static/appsolver/wordledictionary.json')
-    # alt - f = open('bigdictionary.json')
-    myfile = File(f)
-    wordList = json.load(myfile)
-    myfile.close
-    f.close
-
-    # initialize valid_words lists - dictionary with words of proper length
-    # and with T or F indicating whether word valid with current Knowledge
-    all_words = []
-    for word in wordList:
-        if len(word) == WORDLEN and word.isalpha():
-            all_words.append(word)
+    all_words = [word.word_text for word in WordleWord.objects.all()]
     return all_words
 
 # initialize knowledge and return

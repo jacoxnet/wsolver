@@ -7,10 +7,12 @@ Wordle-Solve
 
 {% block body %}
 
-<div class='container row col-12'>\
-    {% include 'appsolver/board.html' %}  
+<div class='container row col-12'>
+    <div class='col-6'>
+        {% include 'appsolver/board.html' %}  
+    </div>
 
-    <div id="guessform" class="col-4">
+    <div id="guessform" class="col-6">
         <form id='gword' action="{% url 'index' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -21,14 +23,8 @@ Wordle-Solve
         </form>
     </div>
 
-    <select class='form select' aria-label='Word suggestion box'>
-        {% for word in wordlist %}
-            <option value='{{ forloop.counter }}'>{{ word }}</option>
-        {% endfor %}
-
-
 </div>
-
+{% include 'appsolver/wordlist.html' %}
 
 <script>
 

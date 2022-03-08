@@ -156,9 +156,11 @@ class WordKnowledge:
                 score = score + (len(valids) - len(k2.getUpdatedWordList(valids)))
         return score
 
-    # pick the best word in word_list that captures the most
+    # score all words in valids using word count method
+    # and return list with top word or words
+    # that captures the most
     # letters in all the words in valids
-    def best_wc_guess(self, valids, word_list):
+    def get_top_words(self, valids):
         # prepare a list of counts of letters in valid words
         counts = {}
         for ch in range(ord('a'), ord('z') + 1):
@@ -174,10 +176,10 @@ class WordKnowledge:
             return sum(set(counts[c] for c in word))
 
         # prepare list of sums for all words in word_list
-        sum_list = [wsum(w) for w in word_list]
+        sum_list = [wsum(w) for w in valids]
         maxindexes = [i for i, x in enumerate(sum_list) if x == max(sum_list)]
         #return max or random choice if more than one max
-        return word_list[random.choice(maxindexes)]
+        return [valids[i] for i in maxindexes]
                 
 
     # figure out word marked active with largest score and return

@@ -7,6 +7,7 @@ from django.urls import reverse
 
 import csv
 from datetime import datetime
+import copy
 
 from .wordle_init import readinwords, initKnowledge, inittheboard
 from .wordle_solve import WORDLEN, GUESSLEN, OneLetterGuess
@@ -16,16 +17,12 @@ from .wordle_solve import WORDLEN, GUESSLEN, OneLetterGuess
 # route /
 def index(request):
     if request.method == "GET":
-        # is this user logged in?
-        username = request.session.get('username', '0')
-        if username == '0':
-            print('I dont recognize you - registering as new')
-            username = register_new_user(request)
+        # reset session data
+        request.session.flush()
+        username = register_new_user(request)
         print('your username is ', username)
-        context = {
-            "theboard": request.session.get('theboard')
-        }
-        return render(request, "appsolver/index.html", context)
+        return HttpResponseRedirect(reverse('guess'))
+        
     elif request.method == "POST":
         theboard = request.session.get('theboard')
         guessword = request.POST["guessword"]
@@ -34,7 +31,7 @@ def index(request):
             # if not return message and go back to 
             # return HttpResponseRedirect(reverse("guess"))
             messages.add_message(request, messages.INFO, "Invalid guess")
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("guess"))
         guessword = guessword.upper()
         g = []
         print('adding', guessword, ' to board at position ', theboard.current_guess)
@@ -67,7 +64,7 @@ def validate(request):
         
         request.session['theboard'] = theboard
         print('guess of ', validateguess, ' recorded')
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("guess"))
         
     else:
         theboard = request.session.get('theboard')
@@ -83,12 +80,13 @@ def register_new_user(request):
     newusername = 'user' + str(User.objects.all().count())
     user = User.objects.create_user(newusername)
     user.save()
-    request.session['username'] = newusername
+    request.session['user'] = user
     clear_board_data(request)
     return newusername
 
 def clear_board_data(request):
     request.session['all_words'] = readinwords()
+    request.session['valid_words'] = copy.deepcopy(request.session.get('all_words'))
     request.session['knowledge'] = initKnowledge()
     request.session['theboard'] = inittheboard()
 
@@ -101,10 +99,12 @@ def clear(request):
 # route /guess
 def guess(request):
     if request.method == "GET":
+        k = request.session.get('knowledge')            
+        valid_words = request.session.get('valid_words')
+        print('retrieved', len(valid_words), ' valid words')
         context = {
-            "theboard": theboard.board,
-            "status": "validate_guess",
-            "wordlen": WORDLEN
+            "theboard": request.session.get('theboard'),
+            "topwords": k.get_top_words(valid_words)
         }
         return render(request, "appsolver/index.html", context)    
 
