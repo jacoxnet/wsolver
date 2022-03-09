@@ -2,8 +2,10 @@ import json
 import copy
 import random
 
-WORDLEN = 5
+# Global defaults
+WORDLEN = 7
 GUESSLEN = 6
+DICT = "dd" # use times dictionary
 
 # LetterGuess contains a representation of a single letter of a guess. It has both
 # letter and color attributes. A guess is a list of LetterGuesses. A Puzzleboard is a 

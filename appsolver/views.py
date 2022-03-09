@@ -10,7 +10,7 @@ from datetime import datetime
 import copy
 
 from .wordle_init import readinwords, initKnowledge, inittheboard
-from .wordle_solve import WORDLEN, GUESSLEN, OneLetterGuess
+from .wordle_solve import WORDLEN, GUESSLEN, DICT, OneLetterGuess
 
 # Create your views here.
 
@@ -18,9 +18,18 @@ from .wordle_solve import WORDLEN, GUESSLEN, OneLetterGuess
 def index(request):
     if request.method == "GET":
         # reset session data
+
+        wordlen = request.session.get('wordlen', WORDLEN)
+        guesslen = request.session.get('guesslen', GUESSLEN)
+        dict = request.session.get('dict', DICT)
+        print('board is ', wordlen, 'by ', guesslen, 'dict ', dict)
         request.session.flush()
+        request.session['wordlen'] = wordlen
+        request.session['guesslen'] = guesslen
+        request.session['dict'] = dict
         username = register_new_user(request)
         print('your username is ', username)
+        print('board is ', wordlen, 'by ', guesslen)
         return HttpResponseRedirect(reverse('guess'))
         
     elif request.method == "POST":
@@ -87,10 +96,10 @@ def register_new_user(request):
     return newusername
 
 def clear_board_data(request):
-    request.session['all_words'] = readinwords()
+    request.session['all_words'] = readinwords(request)
     request.session['valid_words'] = copy.deepcopy(request.session.get('all_words'))
     request.session['knowledge'] = initKnowledge()
-    request.session['theboard'] = inittheboard()
+    request.session['theboard'] = inittheboard(request)
 
 # route clear
 def clear(request):
@@ -117,9 +126,18 @@ def guess(request):
 
 # route settings/
 def settings(request):
-    context = {
-        "wordlen": 5,
-        "guesses": 6
-    }
-    return render(request, "appsolver/settings.html", context)
+    if request.method == 'GET':
+        context = {
+            "wordlen": request.session.get('wordlen'),
+            "guesses": request.session.get('guesslen'),
+            "dict": request.session.get('dict')
+        }
+        return render(request, "appsolver/settings.html", context)
+    else:
+        request.session['wordlen'] = request.POST['wlen']
+        request.session['guesslen'] = request.POST['glen']
+        request.session['dict'] = request.POST['dictionary']
+
+        messages.add_message(request, messages.INFO, f"New Settings Loaded: board size {request.session.get('wordlen')} by {request.session.get('guesslen')}")
+    return HttpResponseRedirect(reverse("index"))
 
