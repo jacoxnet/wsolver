@@ -9,7 +9,7 @@ import csv
 from datetime import datetime
 import copy
 
-from .wordle_init import readinwords, initKnowledge, inittheboard
+from .wordle_init import readinwords, initKnowledge, inittheboard, retrieve_settings, register_new_user, clear_board_data
 from .wordle_solve import WORDLEN, GUESSLEN, DICT, OneLetterGuess
 
 # Create your views here.
@@ -18,18 +18,11 @@ from .wordle_solve import WORDLEN, GUESSLEN, DICT, OneLetterGuess
 def index(request):
     if request.method == "GET":
         # reset session data
-
-        wordlen = request.session.get('wordlen', WORDLEN)
-        guesslen = request.session.get('guesslen', GUESSLEN)
-        dict = request.session.get('dict', DICT)
+        wordlen, guesslen, dict = retrieve_settings(request)
         print('board is ', wordlen, 'by ', guesslen, 'dict ', dict)
-        request.session.flush()
-        request.session['wordlen'] = wordlen
-        request.session['guesslen'] = guesslen
-        request.session['dict'] = dict
         username = register_new_user(request)
         print('your username is ', username)
-        print('board is ', wordlen, 'by ', guesslen)
+        clear_board_data(request)
         return HttpResponseRedirect(reverse('guess'))
         
     elif request.method == "POST":
@@ -87,26 +80,6 @@ def validate(request):
         return render(request, "appsolver/validate.html", context)
             
 
-def register_new_user(request):
-    newusername = 'user' + str(User.objects.all().count())
-    user = User.objects.create_user(newusername)
-    user.save()
-    request.session['user'] = user
-    clear_board_data(request)
-    return newusername
-
-def clear_board_data(request):
-    request.session['all_words'] = readinwords(request)
-    request.session['valid_words'] = copy.deepcopy(request.session.get('all_words'))
-    request.session['knowledge'] = initKnowledge()
-    request.session['theboard'] = inittheboard(request)
-
-# route clear
-def clear(request):
-    clear_board_data(request)
-    messages.add_message(request, messages.INFO, "Board Cleared")
-    return HttpResponseRedirect(reverse("index"))
-
 # route /guess
 def guess(request):
     if request.method == "GET":
@@ -123,6 +96,12 @@ def guess(request):
             "nowords": nowords
         }
         return render(request, "appsolver/index.html", context)    
+
+# route clear
+def clear(request):
+    clear_board_data(request)
+    messages.add_message(request, messages.INFO, "Board Cleared")
+    return HttpResponseRedirect(reverse("index"))
 
 # route settings/
 def settings(request):

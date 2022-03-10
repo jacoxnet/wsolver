@@ -3,17 +3,9 @@ import json, copy
 from .models import WordleWord, BigDWord
 
 def readinwords():    
-    # f = open('/home/jacox/code/wsolver/appsolver/static/appsolver/wordledictionary.json')
-    f = open('/home/jacox/code/wsolver/appsolver/static/appsolver/bigdictionary.json')
-    myfile = File(f)
-    wordList = json.load(myfile)
-    myfile.close
-    f.close
     
-    w_list = []
+    wordList = BigDWord.objects.all()
     for word in wordList:
-        wd = BigDWord(word_text=word)
-        w_list.append(wd)
-        
-    
-    BigDWord.objects.bulk_create(w_list)
+        word.word_length = len(word.word_text)
+        word_alpha = word.isalpha()
+        word.save()
