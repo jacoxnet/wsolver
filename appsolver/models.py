@@ -10,8 +10,3 @@ class BigDWord(models.Model):
 
 class WordleWord(models.Model):
     word_text = models.CharField(max_length=50)
-
-class ValidWord(models.Model):
-    word_text = models.CharField(max_length=50)
-    score = models.SmallIntegerField(null=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)

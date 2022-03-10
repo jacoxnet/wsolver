@@ -1,16 +1,9 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.urls import reverse
 
-import csv
-from datetime import datetime
-import copy
-
-from .wordle_init import readinwords, initKnowledge, inittheboard, retrieve_settings, register_new_user, clear_board_data
-from .wordle_solve import WORDLEN, GUESSLEN, DICT, OneLetterGuess
+from .wordle_init import retrieve_settings, register_new_user, clear_board_data
 
 # Create your views here.
 
@@ -28,22 +21,22 @@ def index(request):
     elif request.method == "POST":
         theboard = request.session.get('theboard')
         guessword = request.POST["guessword"]
-        if len(guessword) != WORDLEN:
+        wordlen = request.session.get('wordlen')
+        if len(guessword) != wordlen:
             # also test if a valid guess word
             # if not return message and go back to 
             # return HttpResponseRedirect(reverse("guess"))
             messages.add_message(request, messages.INFO, "Invalid guess")
             return HttpResponseRedirect(reverse("guess"))
         guessword = guessword.upper()
-        g = []
         print('adding', guessword, ' to board at position ', theboard.current_guess)
-        for i in range(WORDLEN):
+        for i in range(wordlen):
             theboard.board[theboard.current_guess][i].letter = guessword[i]
         request.session['last_guess'] = guessword
         context = {
             "theboard": theboard,
-            "lowid": theboard.current_guess * WORDLEN,
-            "highid": (theboard.current_guess + 1) * WORDLEN
+            "lowid": theboard.current_guess * wordlen,
+            "highid": (theboard.current_guess + 1) * wordlen
         }
         request.session['theboard'] = theboard
         return render(request, "appsolver/validate.html", context)
@@ -53,12 +46,13 @@ def validate(request):
         theboard = request.session.get('theboard')
         validateguess = request.POST["validateguess"]
         print('got ', validateguess, ' from template')
-        if len(validateguess) != WORDLEN or ' ' in validateguess:
+        wordlen = request.session.get('wordlen')
+        if len(validateguess) != wordlen or ' ' in validateguess:
             # space means a letter wasn't selected
             messages.add_message(request, messages.INFO, "Invalid response")
             return HttpResponseRedirect(reverse("validate"))
         # update the board
-        for i in range(WORDLEN):
+        for i in range(wordlen):
             theboard.board[theboard.current_guess][i].color = validateguess[i]
         theboard.current_guess = theboard.current_guess + 1
         last_guess = request.session.get('last_guess')
@@ -72,10 +66,11 @@ def validate(request):
         
     else:
         theboard = request.session.get('theboard')
+        wordlen = request.session.get('wordlen')
         context = {
             "theboard": theboard,
-            "lowid": theboard.current_guess * WORDLEN,
-            "highid": (theboard.current_guess + 1) * WORDLEN
+            "lowid": theboard.current_guess * wordlen,
+            "highid": (theboard.current_guess + 1) * wordlen
         }
         return render(request, "appsolver/validate.html", context)
             
@@ -96,6 +91,16 @@ def guess(request):
             "nowords": nowords
         }
         return render(request, "appsolver/index.html", context)    
+    if request.method == "POST":
+        # comes here on deleting a valid word
+        delword = request.POST["delword"]
+        if delword == "":
+            print("didnt' get delword")
+        if delword != "":
+            print("trying to delete", delword)
+            new_valid_words = request.session.get("valid_words").remove(delword)
+            request.session["valid_Words"] = new_valid_words
+        return HttpResponseRedirect(reverse("guess"))
 
 # route clear
 def clear(request):
@@ -116,7 +121,6 @@ def settings(request):
         request.session['wordlen'] = request.POST['wlen']
         request.session['guesslen'] = request.POST['glen']
         request.session['dict'] = request.POST['dictionary']
-
         messages.add_message(request, messages.INFO, f"New Settings Loaded: board size {request.session.get('wordlen')} by {request.session.get('guesslen')}")
     return HttpResponseRedirect(reverse("index"))
 

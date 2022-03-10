@@ -1,11 +1,5 @@
-import json
 import copy
 import random
-
-# Global defaults
-WORDLEN = 5
-GUESSLEN = 6
-DICT = "td" # use times dictionary
 
 # LetterGuess contains a representation of a single letter of a guess. It has both
 # letter and color attributes. A guess is a list of LetterGuesses. A Puzzleboard is a 
@@ -23,9 +17,9 @@ class OneLetterGuess:
     
 class PuzzleBoard:
 
-    def __init__(self):
-        self.wordlen = WORDLEN
-        self.guesslen = GUESSLEN
+    def __init__(self, wordlen, guesslen):
+        self.wordlen = wordlen
+        self.guesslen = guesslen
         self.board = []
         self.current_guess = 0
 
@@ -39,17 +33,18 @@ class PuzzleBoard:
 #        '^' letter possible in that position but not confirmed
 
 class PositionList:
-    def __init__(self, number):
+    def __init__(self):
         self.letter = {}
         # set all positions and letters to ^ (possible not confirmed)
         for i in range(ord('A'), ord('Z') + 1):
             self.letter[chr(i)] = '^'
 
 class WordKnowledge:
-    def __init__(self):
+    def __init__(self, wordlen):
+        self.wordlen = wordlen
         self.position = []
-        for i in range(WORDLEN):
-            self.position.append(PositionList(i))
+        for i in range(self.wordlen):
+            self.position.append(PositionList())
         # mandatory letters but not in a specific position
         self.mandatory = []
     
@@ -85,7 +80,7 @@ class WordKnowledge:
             self.position[posn].letter[ltr] = '-'
         # otherwise, rule out everywhere not already declared a G
         else:
-            for i in range(WORDLEN):
+            for i in range(self.wordlen):
                 if self.position[i].letter[ltr] != '+':
                     self.position[i].letter[ltr] = '-'
 

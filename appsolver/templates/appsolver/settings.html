@@ -14,21 +14,21 @@ Settings
     <form id='settings' action="{% url 'settings' %}" method="post">
         {% csrf_token %}
         <div class='row justify-content-center'>
-            <div class='col-4'>
+            <div class='col-12 col-sm-6'>
                 <div class='form-group p-1em'>
-                    <label id="wlenlab" for="wlen:" class="form-label">Word Length: (current is {{ wordlen }}) </label>
-                    <input type="range" onchange='showvalue(this);' class="form-control-range" 
+                    <label id="wlenlab" for="wlen:" class="form-label">Word Length: 5</label>
+                    <input type="range" value='5' class='slider' oninput='showvalue(this);'
                         min="5" max="12" id="wlen" name='wlen'>
                 </div>
                 <div class='form-group p-1em'>
-                    <label id="glenlab" for="glen:" class="form-label">Number of Guesses: (current is {{ guesslen }}</label>
-                    <input type="range" onchange='showvalue2(this);' class="form-control-range" 
+                    <label id="glenlab" for="glen:" class="form-label">Number of Guesses: 6</label>
+                    <input type="range" value='6' class='slider' oninput='showvalue2(this);'
                             min="4" max="10" id="glen" name='glen'>
                 </div>
             </div>
         </div>
         <div class='row justify-content-center'>
-            <div class='col-4'>
+            <div class='col-12 col-sm-6'>
                 <div class='form-group p-1em'>
                     <div class='form-check'>
                         <input class='form-check-input' type='radio' name='dictionary' id='tdictionary' value='times' 
@@ -50,11 +50,15 @@ Settings
                             dwyl's English Words file on Github (all word lengths)
                         </label>
                     </div>
-                </div>
-                    
+                </div>  
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <div class='row justify-content-center'>
+            <div class='col-12 col-sm-6 text-center'>
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <a class="btn btn-secondary" href="{% url 'index' %}">Cancel</a>
+            </div>
+        </div>
     </form>
 
 </div>

@@ -33,12 +33,23 @@ Wordle-Solve
             <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
         {% else %}
             <h2>Top suggested guesses:</h2>
-                <ul>
-                    {% for word in topwords %}
-                        <li><h4 id='{{ word }}' onclick=guess_word('{{ word }}')> {{ word }} </h4>
-                        </li>
+            <ul>
+                {% for word in topwords %}
+                    <li>
+                        <p id='{{ word }}' onclick='guess_word("{{ word }}")'> {{ word }}</p>
+                    </li>
                 {% endfor %}
-                </ul>
+                <form id='dword' action="{% url 'guess' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input autocomplete="off" autofocus class="form-control" hidden
+                        name="delword" id='delword' type="text">
+                        <p><button aria-label='delete item' class='btn btn-sm' type='submit'>X</button>
+                            Delete a word Wordle doesn't recognize</p>
+                    </div>
+                </form>
+            </ul>
+
         {% endif %}
     </div>
 
@@ -48,7 +59,15 @@ Wordle-Solve
 
     function guess_word(word) {
         let box = document.querySelector('#guessword');
+        let box2 = document.querySelector('#delword');
         box.setAttribute('value', word);
+        box2.setAttribute('value', word);
+        let allwords = document.querySelectorAll('li p');
+        allwords.forEach((thisValue) => {
+            thisValue.removeAttribute('class')
+        });
+        let theword = document.querySelector('#' + word)
+        theword.setAttribute('class', 'text-light bg-dark');        
     }
 
 </script>

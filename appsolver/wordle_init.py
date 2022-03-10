@@ -1,9 +1,12 @@
-from django.core.files import File
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-import json, copy
-from appsolver.wordle_solve import WordKnowledge, WORDLEN, PuzzleBoard, GUESSLEN, DICT, OneLetterGuess
-from appsolver.models import BigDWord, WordleWord, ValidWord
+import copy
+from appsolver.wordle_solve import WordKnowledge, PuzzleBoard, OneLetterGuess
+from appsolver.models import BigDWord, WordleWord
+
+# Global Defaults
+WORDLEN = 5
+GUESSLEN = 6
+DICT = 'td'
 
 # word list - load in from json file
 # returns valid_words list
@@ -19,7 +22,7 @@ def register_new_user(request):
 def clear_board_data(request):
     request.session['all_words'] = readinwords(request)
     request.session['valid_words'] = copy.deepcopy(request.session.get('all_words'))
-    request.session['knowledge'] = initKnowledge()
+    request.session['knowledge'] = initKnowledge(request.session.get('wordlen'))
     request.session['theboard'] = inittheboard(request)
 
 
@@ -49,12 +52,14 @@ def readinwords(request):
     return all_words
 
 # initialize knowledge and return
-def initKnowledge():
-    return WordKnowledge()
+def initKnowledge(wordlen):
+    return WordKnowledge(wordlen)
 
 # initialize the board
 def inittheboard(request):
-    tb = PuzzleBoard()
+    wordlen = request.session.get('wordlen')
+    guesslen = request.session.get('guesslen')
+    tb = PuzzleBoard(wordlen, guesslen)
 
     for i in range(request.session.get('guesslen')):
         tb.board.append([])

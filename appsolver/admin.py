@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import BigDWord, WordleWord, ValidWord
+from .models import BigDWord, WordleWord
 admin.site.register(BigDWord)
 admin.site.register(WordleWord)
-admin.site.register(ValidWord)
