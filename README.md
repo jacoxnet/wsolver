@@ -106,25 +106,25 @@ The app uses session storage to hold parts of the dictionaries applicable to eac
 
   - The allowed method is a character-frequency count.
 
-        - The program counts the frequencies of all letters in the remaining `valid_words`.
+    - The program counts the frequencies of all letters in the remaining `valid_words`.
 
-        - The program scores each `valid_word` by summing the counts for each of that word's letters.
+    - The program scores each `valid_word` by summing the counts for each of that word's letters.
 
-        - The guesses are the word or words with the highest score.
+    - The guesses are the word or words with the highest score.
 
   - The program includes an implementation of another method, the 'dynamic max elimination' method. 
 
-        - For each word in the `valid_words` list, the program updates a temporary copy of the `WordKnowledge` assuming that word is the solution to the puzzle. 
+    - For each word in the `valid_words` list, the program updates a temporary copy of the `WordKnowledge` assuming that word is the solution to the puzzle. 
 
-        - It then recalculates the number of `valid_words` based on that assumption. 
+    - It then recalculates the number of `valid_words` based on that assumption. 
 
-        - Each possible `valid_word` is scored by noting how many words would be eliminated from the `valid_words` list if that word is, in fact, the secret. 
+    - Each possible `valid_word` is scored by noting how many words would be eliminated from the `valid_words` list if that word is, in fact, the secret. 
 
-        - The guess is the word with the highest score (or if words are tied for the max, a random selection from these words).
+    - The guess is the word with the highest score (or if words are tied for the max, a random selection from these words).
 
-    - The dynamic elimination method, however, did not prove to be performant for valid words lists of more than a few hundred, so it is not permitted in the executing code.
+  - The dynamic elimination method, however, did not prove to be performant for valid words lists of more than a few hundred, so it is not permitted in the executing code.
 
-      - In my experience, the dynamic max elimination method, when activated, outperformed the character-frequency count method, but only by a very small margin.
+    - In my experience, the dynamic max elimination method, when activated, outperformed the character-frequency count method, but only by a very small margin.
 
 ## Results
 
