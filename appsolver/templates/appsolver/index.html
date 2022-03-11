@@ -31,6 +31,8 @@ Wordle-Solve
 
         {% if nowords %}
             <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
+        {% elif noguesses %}
+            <h2>Sorry - the game is ended because there are no further guesses</h2>
         {% else %}
             <h2>Top suggested guesses:</h2>
             <ul>

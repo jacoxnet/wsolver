@@ -85,10 +85,16 @@ def guess(request):
             nowords = True
         else:
             nowords = False
+        theboard = request.session.get("theboard")
+        if theboard.current_guess >= theboard.guesslen:
+            noguesses = True
+        else:
+            noguesses = False
         context = {
             "theboard": request.session.get('theboard'),
             "topwords": k.get_top_words(valid_words),
-            "nowords": nowords
+            "nowords": nowords,
+            "noguesses": noguesses
         }
         return render(request, "appsolver/index.html", context)    
     if request.method == "POST":
