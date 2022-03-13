@@ -1,6 +1,6 @@
 from django.core.files import File
 import json, copy
-from .models import WordleWord, BigDWord
+from appsolver.models import WordleWord, BigDWord
 
 def readinwords():    
     

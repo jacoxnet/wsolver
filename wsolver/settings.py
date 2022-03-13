@@ -9,8 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-iimport dj-database_url
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,8 +25,8 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-vaa=g&hu5dlc=r7d450^k-)ueeg+8r4dvlk)vf%*dxj9x4t+$y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'wordle-solver-cox.herokuapp.com']
 
@@ -83,13 +81,22 @@ WSGI_APPLICATION = 'wsolver.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'wsolver',
+        'USER': 'jacox',
+        'PASSWORD': 'db',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
+
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
