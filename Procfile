@@ -1,1 +1,1 @@
-web: gunicorn wsolver.wsgi
+web: gunicorn wsolver.wsgi --log-file -
