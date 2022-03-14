@@ -7,12 +7,12 @@ Wordle-Solve validate
 
 {% block body %}
 
-<div class='container row col-12'>
-    <div class='col-6'>
+<div class='container row'>
+    <div class='col-12 col-md-6'>
         {% include 'appsolver/board.html' %}
     </div>
     
-    <div id="validateform" class="col-4">
+    <div id="validateform" class="col-12 col-md-4">
         <form id='validation' action="{% url 'validate' %}" method="post">
             {% csrf_token %}
             <h4>Click on each letter of your last guess to change the color to match the wordle response</h4>
