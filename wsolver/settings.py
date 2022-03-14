@@ -27,8 +27,7 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-vaa=g&hu5dlc=r7d450^k-)ueeg+8r4dvlk)vf%*dxj9x4t+$y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'wordle-solver-cox.herokuapp.com']
 
