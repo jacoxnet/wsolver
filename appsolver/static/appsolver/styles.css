@@ -36,6 +36,11 @@
     color: #239346;
 }
 
+ul {
+    display: table;
+    margin: 0 auto;
+  }
+
 .welcome1, .welcome2 {
     text-align: center;
     background-color: lightgray;

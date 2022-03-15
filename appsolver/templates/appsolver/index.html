@@ -8,11 +8,11 @@ Wordle-Solve
 {% block body %}
 
 <div class='container row col-12'>
-    <div class='col-12 col-md-6'>
+    <div class='col-12 col-lg-6'>
         {% include 'appsolver/board.html' %}  
     </div>
 
-    <div id="guessform" class="col-12 col-md-6">
+    <div id="guessform" class="col-12 col-lg-6">
         <form id='gword' action="{% url 'index' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -27,7 +27,7 @@ Wordle-Solve
 
 <div id='wordform' class='row justify-content-center'>
 
-    <div class='col-12 col-md-6'>
+    <div class='col-12 col-lg-6 text-center'>
 
         {% if nowords %}
             <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
@@ -35,9 +35,9 @@ Wordle-Solve
             <h2>Sorry - the game is ended because there are no further guesses</h2>
         {% else %}
             <h2>Top suggested guesses:</h2>
-            <ul>
+            <ul class='list-group'>
                 {% for word in topwords %}
-                    <li>
+                    <li class='list-group-item'>
                         <p id='{{ word }}' onclick='guess_word("{{ word }}")'> {{ word }}</p>
                     </li>
                 {% endfor %}
