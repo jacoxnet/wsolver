@@ -1,5 +1,5 @@
 #mgrid {
-    width:100%
+    width:100%;
     border-collapse: separate;
     border-spacing: 5px;
     border: 2px solid black;
@@ -44,6 +44,7 @@ ul {
   }
 
 .welcome1, .welcome2 {
+    width:75%;
     text-align: center;
     background-color: lightgray;
 }
