@@ -1,15 +1,17 @@
 #mgrid {
+    width:100%
     border-collapse: separate;
     border-spacing: 5px;
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 #mgrid td {
     width: 40px;
-    height: 2em;
-    font-size:xx-large;
+    height: 80px;
+    font-size:xxx-large;
     text-align: center;
     vertical-align: middle;
+    border: 1px solid black;
 }
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
