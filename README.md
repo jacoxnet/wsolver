@@ -16,11 +16,13 @@ This project was intended to satisfy the final or capstone project for CS50 Web 
 
 - The additional functionality of Wordle-Solve can be viewed and tested at sites such as `https://hellowordl.net/#`, which provides Wordle-like functionality but with the ability to create puzzles of different word lengths.
 
+- The app is mobile-friendly and allows use on a smaller phone or other device.
+
 **Distinctiveness and Complexity:**
 
 The author believes there were two principal complex and interesting issues in implementing this application.
 
-- First, it took significant thought and planning to develop algorithms capable of solving Wordle puzzles. As described below, two algorithms were developed, although only one proved performant enough for inclusion here. 
+- First, it took significant thought and planning to develop algorithms capable of solving Wordle puzzles. As described below, two algorithms were developed, although only one proved performant enough for inclusion here.
   
 - Second, I think the app faithfully executes the Django philosophy in its data connections between the python server code and the `javascript` and `html` code in the templates. In some cases, it might have been easier if everything could have been implemented in `javascript`, but it was enjoyable to see how the Django framework can create the same functionality.
 
@@ -44,7 +46,7 @@ The app is implements using Python3, Javascript, and the Django framework. The p
 
   - `board.html` Generate the board image
 
-  - ` index.html` Show suggested guesses and allow entry
+  - `index.html` Show suggested guesses and allow entry
 
   - `settings.html` Change settings
 
@@ -66,7 +68,9 @@ The app uses Django's built-in support for modeling database tables and function
     class WordleWord(models.Model):
         word_text = models.CharField(max_length=50)
 
-`WordleWord`*holds the smaller 5-word Wordle dictionary, which I downloaded from the Wordle website on February 22, 2022.*    
+`WordleWord`*holds the smaller 5-word Wordle dictionary, which I downloaded from the Wordle website on February 22, 2022.*
+
+The app was originally written using SQLITE3 database but has been upgraded to support POSTGRESQL and migration to the `heroku` service. (See `wordle-solver-cox.herokuapp.com`).
 
 ### Session
 
