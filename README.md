@@ -70,7 +70,7 @@ The app uses Django's built-in support for modeling database tables and function
 
 `WordleWord`*holds the smaller 5-word Wordle dictionary, which I downloaded from the Wordle website on February 22, 2022.*
 
-The app was originally written using SQLITE3 database but has been upgraded to support POSTGRESQL and migration to the `heroku` service. (See `wordle-solver-cox.herokuapp.com`).
+The app was originally written using SQLITE3 database but has been updated to support POSTGRESQL and migration to the `heroku` service. (See `wordle-solver-cox.herokuapp.com`). The databases were populated with words using the django shell command and the code in the `uploads.py` module.
 
 ### Session
 
