@@ -65,6 +65,8 @@ Wordle-Solve
     function guess_word(word) {
         let box = document.querySelector('#guessword');
         let box2 = document.querySelector('#delword');
+        const lowid = {{ lowid }};
+        const highid = {{ highid }};
         box.setAttribute('value', word);
         box2.setAttribute('value', word);
         let allwords = document.querySelectorAll('li p');
@@ -72,7 +74,10 @@ Wordle-Solve
             thisValue.removeAttribute('class')
         });
         let theword = document.querySelector('#' + word)
-        theword.setAttribute('class', 'text-light bg-dark');        
+        theword.setAttribute('class', 'text-light bg-dark');
+        for (let c = lowid; c < highid; c++) {
+            document.getElementById(c).innerHTML = word[c - lowid];
+        }    
     }
 
     const aleph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
