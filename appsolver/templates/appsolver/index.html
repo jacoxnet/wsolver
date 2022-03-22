@@ -49,7 +49,7 @@ Wordle-Solve
                             <input autocomplete="off" autofocus class="form-control" hidden
                             name="delword" id='delword' type="text">
                             <p><button aria-label='delete item' class='btn btn-sm' type='submit'>X</button>
-                                Delete a word Wordle doesn't recognize</p>
+                                Discard a suggested word</p>
                         </div>
                     </form>
                 </ul>
@@ -82,31 +82,45 @@ Wordle-Solve
 
     const aleph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    // display new word on board
+    function displayPartWord(word) {
+        const lowid = {{ lowid }};
+        const highid = {{ highid }};
+        console.log('putting word on board');
+        console.log(word);
+        for (let c = lowid; c < highid; c++) {
+            if (c - lowid > word.length) {
+                document.getElementById(c).innerHTML = ' ';
+            }
+            else {
+                document.getElementById(c).innerHTML = word.substring(c - lowid, c - lowid + 1);
+            }
+        }
+    }
+
     function checkKeys(event) {
+        event.preventDefault();
         var k = event.key;
         const lowid = {{ lowid }};
         const highid = {{ highid }};
-        var box = document.querySelector('#guessword');
-        var partword = box.getAttribute('value');
+        var partword = document.getElementById('guessword').value;
         if (aleph.includes(k) || aleph.includes(k.toUpperCase())) {
             k = k.toUpperCase();
-            box.setAttribute('value', partword + k);
-            let c = lowid + partword.length; 
-            if (c < highid) {
-                document.getElementById(c).innerHTML = k;  
-            }
+            let newword = partword + k;
+            console.log('caught regular letter');
+            console.log(k);
+            console.log('new word is');
+            console.log(newword);
+            document.getElementById('guessword').value = newword;
+            displayPartWord(newword);
         }
         else if (k == 'Backspace' || k == 'Delete') {
             console.log('caught backspace');
             console.log('partword is');
             console.log(partword);
-            if (partword.length > 0) {
-                box.setAttribute('value', partword.substring(0, partword.length - 1));
-                let c = lowid + partword.length - 1;
-                if (c < highid) {
-                    document.getElementById(c).innerHTML = ' ';
-                }
-            }
+            let newword = (partword.length > 0)? partword.substring(0, partword.length - 1) : ''
+            document.getElementById('guessword').value = newword;
+            displayPartWord(newword);
         }
         else if (k == 'Enter') {
             if (partword.length == highid - lowid) {
