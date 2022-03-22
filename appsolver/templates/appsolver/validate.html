@@ -7,23 +7,25 @@ Wordle-Solve validate
 
 {% block body %}
 
-<div class='container row'>
-    <div class='col-12 col-lg-6'>
-        {% include 'appsolver/board.html' %}
+<div class='container'
+    <div class='row justify-content-center'>
+        <div class='col-12 col-lg-6 offset-lg-3'>
+            {% include 'appsolver/board.html' %}
+        </div>
     </div>
-    
-    <div id="validateform" class="col-12 col-lg-4">
-        <form id='validation' action="{% url 'validate' %}" method="post">
-            {% csrf_token %}
-            <h4>Click on each letter of your last guess to change the color to match the wordle response</h4>
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" 
-                id="validateguess" name="validateguess" type="hidden" value="">
-                <button class="btn btn-primary" type="submit">Validate</button>
-            </div>
-        </form>
+    <div class='row justify-content-center'>       
+        <div id="validateform" class="col-12 col-lg-4 text-center">
+            <form id='validation' action="{% url 'validate' %}" method="post">
+                {% csrf_token %}
+                <h5>CLICK ON LETTERS TO MATCH WORDLE RESPONSE</h4>
+                <div class="form-group">
+                    <input autocomplete="off" autofocus class="form-control" 
+                    id="validateguess" name="validateguess" type="hidden" value="">
+                    <button class="btn btn-primary" type="submit">Matched</button>
+                </div>
+            </form>
+        </div>
     </div>
-    
 </div>
 
 

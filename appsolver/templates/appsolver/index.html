@@ -7,51 +7,55 @@ Wordle-Solve
 
 {% block body %}
 
-<div class='container row justify-content-center'>
-    <div class='col-lg-6 offset-lg-3'>
-        {% include 'appsolver/board.html' %}  
+<div class='container'
+    <div class='row justify-content-center'>
+        <div class='col-12 col-lg-6 offset-lg-3'>
+            {% include 'appsolver/board.html' %}  
+        </div>
+    </div>
+    <div class='row justify-content-center'>
+        <div id="guessform" class="col-12 col-lg-6">
+            <form id='gword' action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input autocomplete="off" autofocus class="form-control" hidden
+                        name="guessword" id='guessword' placeholder="Your Guess" type="text" value=''>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div id="guessform" class="col-12 col-lg-6">
-        <form id='gword' action="{% url 'index' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" hidden
-                    name="guessword" id='guessword' placeholder="Your Guess" type="text" value=''>
-            </div>
-        </form>
-    </div>
+    <div id='wordform' class='row justify-content-center'>
 
-</div>
+        <div class='col-12 col-lg-6 text-center'>
 
-<div id='wordform' class='container row justify-content-center'>
+            {% if nowords %}
+                <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
+            {% elif noguesses %}
+                <h2>Sorry - the game is ended because there are no further guesses</h2>
+            {% else %}
+                <p></p>
+                <h5>SUGGESTED GUESSES:</h5>
+                <ul class='list-group'>
+                    {% for word in topwords %}
+                        <li class='list-group-item'>
+                            <p id='{{ word }}' onclick='guess_word("{{ word }}")'> {{ word }}</p>
+                        </li>
+                    {% endfor %}
+                    <form id='dword' action="{% url 'guess' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input autocomplete="off" autofocus class="form-control" hidden
+                            name="delword" id='delword' type="text">
+                            <p><button aria-label='delete item' class='btn btn-sm' type='submit'>X</button>
+                                Delete a word Wordle doesn't recognize</p>
+                        </div>
+                    </form>
+                </ul>
 
-    <div class='col-12 col-lg-6 text-center'>
-
-        {% if nowords %}
-            <h2>Sorry - the game is ended because no dictionary words satisfy your response</h2>
-        {% elif noguesses %}
-            <h2>Sorry - the game is ended because there are no further guesses</h2>
-        {% else %}
-            <h2>Top suggested guesses:</h2>
-            <ul class='list-group'>
-                {% for word in topwords %}
-                    <li class='list-group-item'>
-                        <p id='{{ word }}' onclick='guess_word("{{ word }}")'> {{ word }}</p>
-                    </li>
-                {% endfor %}
-                <form id='dword' action="{% url 'guess' %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input autocomplete="off" autofocus class="form-control" hidden
-                        name="delword" id='delword' type="text">
-                        <p><button aria-label='delete item' class='btn btn-sm' type='submit'>X</button>
-                            Delete a word Wordle doesn't recognize</p>
-                    </div>
-                </form>
-            </ul>
-
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 
 </div>
