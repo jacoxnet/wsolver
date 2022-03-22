@@ -19,6 +19,7 @@ def index(request):
         return HttpResponseRedirect(reverse('guess'))
         
     elif request.method == "POST":
+        # This handles original submission of a new guess word
         theboard = request.session.get('theboard')
         guessword = request.POST["guessword"]
         wordlen = request.session.get('wordlen')
@@ -32,6 +33,7 @@ def index(request):
         print('adding', guessword, ' to board at position ', theboard.current_guess)
         for i in range(wordlen):
             theboard.board[theboard.current_guess][i].letter = guessword[i]
+            theboard.board[theboard.current_guess][i].color = 'B'            
         request.session['last_guess'] = guessword
         context = {
             "theboard": theboard,
@@ -43,6 +45,8 @@ def index(request):
 
 def validate(request):
     if request.method == 'POST':
+        # this handles validation of a guess once color codes are
+        # entered and it's time to update knowledge
         theboard = request.session.get('theboard')
         validateguess = request.POST["validateguess"]
         print('got ', validateguess, ' from template')
@@ -65,6 +69,8 @@ def validate(request):
         return HttpResponseRedirect(reverse("guess"))
         
     else:
+        # request method GET - handles calculating template for color
+        # selection
         theboard = request.session.get('theboard')
         wordlen = request.session.get('wordlen')
         context = {
@@ -78,6 +84,7 @@ def validate(request):
 # route /guess
 def guess(request):
     if request.method == "GET":
+        # this handles submission of guess words
         k = request.session.get('knowledge')            
         valid_words = request.session.get('valid_words')
         print('retrieved', len(valid_words), ' valid words')
@@ -90,11 +97,14 @@ def guess(request):
             noguesses = True
         else:
             noguesses = False
+        wordlen = request.session.get('wordlen')
         context = {
-            "theboard": request.session.get('theboard'),
+            "theboard": theboard,
             "topwords": k.get_top_words(valid_words),
             "nowords": nowords,
-            "noguesses": noguesses
+            "noguesses": noguesses,
+            "lowid": theboard.current_guess * wordlen,
+            "highid": (theboard.current_guess + 1) * wordlen
         }
         return render(request, "appsolver/index.html", context)    
     if request.method == "POST":

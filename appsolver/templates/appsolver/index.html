@@ -8,7 +8,7 @@ Wordle-Solve
 {% block body %}
 
 <div class='container row justify-content-center'>
-    <div class='col-12 col-lg-6'>
+    <div class='col-lg-6 offset-lg-3'>
         {% include 'appsolver/board.html' %}  
     </div>
 
@@ -16,10 +16,9 @@ Wordle-Solve
         <form id='gword' action="{% url 'index' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" 
-                    name="guessword" id='guessword' placeholder="Your Guess" type="text">
+                <input autocomplete="off" autofocus class="form-control" hidden
+                    name="guessword" id='guessword' placeholder="Your Guess" type="text" value=''>
             </div>
-            <button class="btn btn-primary" type="submit">Submit</button>
         </form>
     </div>
 
@@ -71,6 +70,46 @@ Wordle-Solve
         let theword = document.querySelector('#' + word)
         theword.setAttribute('class', 'text-light bg-dark');        
     }
+
+    const aleph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function checkKeys(event) {
+        var k = event.key;
+        const lowid = {{ lowid }};
+        const highid = {{ highid }};
+        var box = document.querySelector('#guessword');
+        var partword = box.getAttribute('value');
+        if (aleph.includes(k) || aleph.includes(k.toUpperCase())) {
+            k = k.toUpperCase();
+            box.setAttribute('value', partword + k);
+            let c = lowid + partword.length; 
+            if (c < highid) {
+                document.getElementById(c).innerHTML = k;  
+            }
+        }
+        else if (k == 'Backspace' || k == 'Delete') {
+            console.log('caught backspace');
+            console.log('partword is');
+            console.log(partword);
+            if (partword.length > 0) {
+                box.setAttribute('value', partword.substring(0, partword.length - 1));
+                let c = lowid + partword.length - 1;
+                if (c < highid) {
+                    document.getElementById(c).innerHTML = ' ';
+                }
+            }
+        }
+        else if (k == 'Enter') {
+            if (partword.length == highid - lowid) {
+                document.getElementById('gword').submit();
+            }
+        }
+        // all other keys are ignored
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('keydown', checkKeys);
+    });
 
 </script>
 

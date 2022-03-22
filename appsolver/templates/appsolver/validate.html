@@ -29,7 +29,7 @@ Wordle-Solve validate
 
 <script>
     
-    /* handlee clicks on board letters in current guess, rotating them as necessary in color
+    /* handle clicks on board letters in current guess, rotating them as necessary in color
        keep record of color to pass back to server app */
 
     function recordloc(cid) {
@@ -61,9 +61,9 @@ Wordle-Solve validate
                     console.log('was yellow now green');
                 }
                 if (ccolor == 'G') {
-                    newcolor = ' ';
+                    newcolor = 'B';
                     cell.setAttribute('data', newcolor);
-                    cell.setAttribute('class', 'noselect text-dark bg-light');
+                    cell.setAttribute('class', 'noselect text-light bg-dark');
                     console.log('was gold now blank');
                 }
                 ccolor = newcolor
