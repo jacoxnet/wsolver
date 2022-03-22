@@ -75,8 +75,13 @@ ul {
     padding:1em;
 }
 
+button {
+    margin-top: 5px;
+}
+
 #guessform {
     text-align: center;
+
 }
 
 div.evencategory, div.oddcategory {

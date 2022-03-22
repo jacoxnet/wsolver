@@ -18,7 +18,7 @@ Wordle-Solve
             <form id='gword' action="{% url 'index' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <input autocomplete="off" autofocus class="form-control" hidden
+                    <input autocomplete="off" autofocus class="form-control"
                         name="guessword" id='guessword' placeholder="Your Guess" type="text" value=''>
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </div>
@@ -119,6 +119,10 @@ Wordle-Solve
     document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('keydown', checkKeys);
     });
+
+    window.onload = function() {
+        document.getElementById('guessword').focus();
+    }
 
 </script>
 
