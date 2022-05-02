@@ -1,5 +1,11 @@
 # WORDLE-SOLVE
 
+______________________________________
+Version 2
+______________________________________
+
+For version 2, I'm revising the app to focus only on five-letter words and the Wordle-derived dictionary. By doing this, I can make the algorithm much more accurate and efficient in guessing words. 
+
 ## Introduction
 
 This project was intended to satisfy the final or capstone project for CS50 Web Programming with Python and Javascript.

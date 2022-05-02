@@ -1,5 +1,13 @@
 import copy
 import random
+#import multiprocessing as mp
+import time
+
+from appsolver.listofwords import ALLWORDS, SOLUTIONS
+
+THREADS = 1
+WORDLEN = 5
+GUESSLEN = 6
 
 # LetterGuess contains a representation of a single letter of a guess. It has both
 # letter and color attributes. A guess is a list of LetterGuesses. A Puzzleboard is a 
@@ -40,8 +48,14 @@ class PositionList:
             self.letter[chr(i)] = '^'
 
 class WordKnowledge:
-    def __init__(self, wordlen):
+
+    # structure for scoring guess words
+    guessWords = SOLUTIONS + ALLWORDS
+
+    def __init__(self, wordlen, all_words, valid_words):
         self.wordlen = wordlen
+        self.all_words = all_words
+        self.valid_words = valid_words
         self.position = []
         for i in range(self.wordlen):
             self.position.append(PositionList())
@@ -97,8 +111,10 @@ class WordKnowledge:
     # go through list of words passed (valid_words) and
     # test to see if they meet current knowledge criteria
     # returns updated word list
-    def getUpdatedWordList(self, wordlist):
-        return [word for word in wordlist if self.test_word(word)]
+    def updateValidWordList(self):
+        for word in copy.copy(self.valid_words):
+            if not self.test_word(word):
+                self.valid_words.remove(word)
 
     # update knowledge based on color response to guess word
     # response is in the form of a string of G, B, and Y. 
@@ -122,86 +138,61 @@ class WordKnowledge:
     #   G - green (letter correct in proper position)
     #   Y - yellow (letter correc in wrong position)
     #   B - black or shadow (letter not in word)
-    def color_calc(self, guess, secret):
-        returnVal = ""
+    # because there can be duplicate letters, when we find a match we
+    # replace the letter in the secret with space so it isn't found again
+    @staticmethod
+    def colorCalc(guess, secret):
+        listSecret = list(secret)
+        response = WORDLEN * [' ']
         for i in range(len(guess)):
-            if guess[i] == secret[i]:
-                returnVal = returnVal + 'G'
-            elif guess[i] in secret:
-                returnVal = returnVal + 'Y'
+            if guess[i] == listSecret[i]:
+                response[i] = 'G'
+                listSecret[i] = ' '
+        for i in range(len(guess)):
+            if response[i] != 'G' and guess[i] in listSecret:
+                response[i] = 'Y'
+                listSecret[listSecret.index(guess[i])] = ' '
+        response = [item if item != ' ' else 'B' for item in response]
+        return ''.join(response)
+
+    # given a guessword, returns the expected size of resulting groupings
+    # that guess word could divide the solution words
+    def scoreGuess(self, guessWord):
+        rdict = {}
+        for testword in self.valid_words:
+            result = WordKnowledge.colorCalc(guessWord, testword)
+            if result in rdict:
+                rdict[result] = rdict[result] + 1
             else:
-                returnVal = returnVal + 'B'
-        return returnVal
+                rdict[result] = 1
+        s = sum([v ** 2 for v in rdict.values()]) / sum(rdict.values())
+        #print(f"Scoring {guessWord}, {s} {rdict}")
+        return s
 
-    # calculate escore for word
-    # escore adds up the number of words in valids that would be eliminated
-    # if we choose 'guess' and the secret word is one of the existing valids
-    # don't count the case of the secret is the guess since that's always going to 
-    # be the same number
-    def calc_escore(self, guess, valids):
-        score = 0
-        if len(valids) == 1:
-            return 100 * (guess == valids[0])
-        for word in valids:
-            if word != guess:
-                k2 = copy.deepcopy(self)
-                # calculate the response assuming word is the secret
-                response = k2.color_calc(guess, word)
-                # update copy of knowledge with that response
-                k2.update_knowledge(guess, response)
-                # delta score is difference between # of original valids minus assumed new valids
-                score = score + (len(valids) - len(k2.getUpdatedWordList(valids)))
-        return score
 
-    # score all words in valids using word count method
-    # and return list with top word or words
-    # that captures the most
-    # letters in all the words in valids
-    def get_top_words(self, valids):
-        # prepare a list of counts of letters in valid words
-        counts = {}
-        for ch in range(ord('A'), ord('Z') + 1):
-            count1 = 0
-            for word in valids:
-                if chr(ch) in word:
-                    count1 = count1 + 1
-            counts[chr(ch)] = count1
-
-        # calculate score for a word
-        def wsum(word):
-            # by using set, we eliminate duplicates
-            return sum(set(counts[c] for c in word))
-
-        # prepare list of sums for all words in word_list
-        sum_list = [wsum(w) for w in valids]
-        maxindexes = [i for i, x in enumerate(sum_list) if x == max(sum_list)]
-        #return max or random choice if more than one max
-        return [valids[i] for i in maxindexes]
-                
+    def allMins(self, wordList, scoreList):
+        # find minimum value
+        mm = min(scoreList)
+        #create list of all minimum words
+        rv = [word for word in wordList if scoreList[wordList.index(word)] == mm]
+        # create smaller list of secretwords in earlier list
+        sv = [secretWord for secretWord in rv if secretWord in self.valid_words]
+        # return only secret words if there are some
+        if len(sv) > 0:
+            return sv
+        else:
+            return rv              
 
     # figure out word marked active with largest score and return
-    def nextGuess(self, valids, all_words):
-        wc_guess = self.best_wc_guess(valids, all_words)
-        print('Evaluating ', len(valids), 'possibilities')
-        if len(valids) > 400:
-            print('Using word count method only')
-            return self.best_wc_guess(valids, all_words)
-        else:
-            print('Using dynamic max elimination method')
-        topscore = 0
-        topwords = []
-        # add best wc guess to list
-        valids.append(wc_guess)
-        for word in valids:
-            s = self.calc_escore(word, valids)
-            if s == topscore:
-                topwords.append(word)
-            elif s > topscore:
-                topwords = [word]
-                top = s
-        if len(topwords) == 0:
-            print('Error in selecting guess')
-        topword = random.choice(topwords)
-        print('Next guess is ', topword)
-        print('word count method would have returned ', wc_guess)
-        return topword
+    def nextGuess(self):
+        print('Evaluating ', len(self.valid_words), 'possibilities')
+        if len(self.valid_words) == 1:
+            return self.valid_words
+        start = time.time()
+        #p = mp.Pool(processes=THREADS)
+        guessWordsResults = list(map(self.scoreGuess, self.all_words))
+        endtime = time.time()
+        print(f'Threads {THREADS} total time: {endtime - start}')
+        s = self.allMins(list(self.all_words), guessWordsResults)
+        print(s)
+        return s
