@@ -175,8 +175,10 @@ class WordKnowledge:
         mm = min(scoreList)
         #create list of all minimum words
         rv = [word for word in wordList if scoreList[wordList.index(word)] == mm]
+        print (f"Len rv is {len(rv)}")
         # create smaller list of secretwords in earlier list
         sv = [secretWord for secretWord in rv if secretWord in self.valid_words]
+        print (f"Len sv is {len(sv)}")
         # return only secret words if there are some
         if len(sv) > 0:
             return sv
