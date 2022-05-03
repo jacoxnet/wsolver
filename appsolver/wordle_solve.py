@@ -190,11 +190,15 @@ class WordKnowledge:
         print('Evaluating ', len(self.valid_words), 'possibilities')
         if len(self.valid_words) == 1:
             return self.valid_words
-        start = time.time()
-        p = mp.Pool(processes=THREADS)
-        guessWordsResults = list(p.map(self.scoreGuess, self.all_words))
-        endtime = time.time()
-        print(f'Threads {THREADS} total time: {endtime - start}')
-        s = self.allMins(list(self.all_words), guessWordsResults)
+        # first guess?
+        if len(self.valid_words) == len(self.all_words):
+            s = ['ROATE']
+        else:
+            start = time.time()
+            p = mp.Pool(processes=THREADS)
+            guessWordsResults = list(p.map(self.scoreGuess, self.all_words))
+            endtime = time.time()
+            print(f'Threads {THREADS} total time: {endtime - start}')
+            s = self.allMins(list(self.all_words), guessWordsResults)
         print(s)
         return s
