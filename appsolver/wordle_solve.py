@@ -5,7 +5,7 @@ import time
 
 from appsolver.listofwords import ALLWORDS, SOLUTIONS
 
-THREADS = 5
+THREADS = 10
 WORDLEN = 5
 GUESSLEN = 6
 
