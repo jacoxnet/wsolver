@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from .wordle_init import WORDLEN, GUESSLEN, register_new_user, clear_board_data
 
-# Create your views here.
+# Create your views here. 
 
 # route /
 def index(request):
