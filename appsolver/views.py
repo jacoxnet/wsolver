@@ -85,8 +85,12 @@ def guess(request):
         k = request.session.get('knowledge')            
         valid_words = k.valid_words
         print('retrieved', len(valid_words), ' valid words')
+        nowords = False
+        solved = False
         if len(valid_words) == 0:
             nowords = True
+        elif len(valid_words) == 1:
+            solved = True
         else:
             nowords = False
         theboard = request.session.get("theboard")
@@ -96,6 +100,7 @@ def guess(request):
             noguesses = False
         context = {
             "theboard": theboard,
+            "solved": solved,
             "topwords": k.nextGuess(),
             "nowords": nowords,
             "noguesses": noguesses,

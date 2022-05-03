@@ -1,11 +1,11 @@
 import copy
 import random
-#import multiprocessing as mp
+import multiprocessing as mp
 import time
 
 from appsolver.listofwords import ALLWORDS, SOLUTIONS
 
-THREADS = 1
+THREADS = 5
 WORDLEN = 5
 GUESSLEN = 6
 
@@ -191,8 +191,8 @@ class WordKnowledge:
         if len(self.valid_words) == 1:
             return self.valid_words
         start = time.time()
-        #p = mp.Pool(processes=THREADS)
-        guessWordsResults = list(map(self.scoreGuess, self.all_words))
+        p = mp.Pool(processes=THREADS)
+        guessWordsResults = list(p.map(self.scoreGuess, self.all_words))
         endtime = time.time()
         print(f'Threads {THREADS} total time: {endtime - start}')
         s = self.allMins(list(self.all_words), guessWordsResults)

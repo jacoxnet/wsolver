@@ -35,6 +35,10 @@ Wordle-Solve
             {% elif noguesses %}
                 <h2>Sorry - the game is ended because there are no further guesses</h2>
             {% else %}
+                {% if solved %} 
+                    <h2>The puzzle is solved</h2>
+                {% endif %}
+            
                 <p></p>
                 <h5>SUGGESTED GUESSES:</h5>
                 <ul class='list-group'>
