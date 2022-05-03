@@ -49,12 +49,7 @@ Wordle-Solve
                     {% endfor %}
                     <form id='dword' action="{% url 'guess' %}" method="post">
                         {% csrf_token %}
-                        <div class="form-group">
-                            <input autocomplete="off" autofocus class="form-control" hidden
-                            name="delword" id='delword' type="text">
-                            <p><button aria-label='delete item' class='btn btn-sm' type='submit'>X</button>
-                                Discard a suggested word</p>
-                        </div>
+                    
                     </form>
                 </ul>
 
