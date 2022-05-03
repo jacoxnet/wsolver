@@ -191,7 +191,8 @@ class WordKnowledge:
         if len(self.valid_words) == 1:
             return self.valid_words
         # first guess?
-        if len(self.valid_words) == len(self.all_words):
+        if len(self.valid_words) == len(SOLUTIONS):
+            print(f"First guess - guess ROATE")
             s = ['ROATE']
         else:
             start = time.time()
