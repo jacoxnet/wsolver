@@ -10,7 +10,6 @@ colorama==0.4.4
 configobj==5.0.6
 constantly==15.1.0
 cryptography==3.4.8
-dbus-python==1.2.18
 distro==1.7.0
 httplib2==0.20.2
 hyperlink==21.0.0
@@ -33,7 +32,6 @@ pexpect==4.8.0
 ptyprocess==0.7.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.1
-PyGObject==3.42.0
 PyHamcrest==2.0.2
 PyJWT==2.3.0
 pyOpenSSL==21.0.0
